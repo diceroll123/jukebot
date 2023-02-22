@@ -109,7 +109,8 @@ class Music(commands.Cog):
                 await interaction.user.voice.channel.connect()
             else:
                 await interaction.response.send_message(
-                    "You are not connected to a voice channel.", ephemeral=True
+                    f"You are not connected to a voice channel. Join <#{NEO_JUKEBOX}>!",
+                    ephemeral=True,
                 )
                 raise commands.CommandError("Author not connected to a voice channel.")
         elif interaction.guild.voice_client.is_playing():  # type: ignore

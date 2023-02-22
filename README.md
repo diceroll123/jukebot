@@ -23,3 +23,8 @@ To deploy this project, run
 ## Notes
 
 - At the moment, this is hardcoded to work with one server and one channel within the server using their IDs. This may or may not change.
+
+## Community Fanart
+
+![Happy Bots](assets/happybots.jpg)
+Drawn by **Mimble 🍄 - (One Umbrella#0520)**

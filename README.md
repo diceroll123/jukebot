@@ -15,7 +15,7 @@ To run this project, you will need to add the following environment variables to
 To deploy this project, run
 
 ```bash
-  docker build -t jukebot . && docker run -it -v "$(pwd)"/cogs:/app/cogs -v "$(pwd)"/music:/app/music  --rm --name running-jukebot jukebot
+docker build -t jukebot . && docker run -it -v "$(pwd)"/:/app --rm --name running-jukebot jukebot 
 ```
 
 *TODO: make that into a docker-compose*

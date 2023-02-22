@@ -70,6 +70,11 @@ class Debug(commands.Cog):
             return
         await ctx.send(python.format(result))
 
+    @commands.command()
+    async def source(self, ctx: Context[Jukebot]) -> None:
+        """Links to my full source code."""
+        await ctx.send("<https://github.com/diceroll123/jukebot>")
+
 
 async def setup(bot: Jukebot) -> None:
     await bot.add_cog(Debug(bot))

@@ -1,8 +1,9 @@
+import asyncio
 import random
 from pathlib import Path
 
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 from jukebot import Jukebot
 
@@ -40,6 +41,18 @@ async def songs_autocomplete(
 class Music(commands.Cog):
     def __init__(self, bot: Jukebot) -> None:
         self.bot = bot
+        self.check_voice.start()
+
+    @tasks.loop(seconds=15)
+    async def check_voice(self) -> None:
+        """Checks if the bot is alone in a voice channel and disconnects if so"""
+        await self.bot.wait_until_ready()
+        for vc in self.bot.voice_clients:
+            if len(vc.channel.members) == 1:  # type: ignore
+                asyncio.create_task(vc.disconnect(force=True))
+
+    async def cog_unload(self) -> None:
+        self.check_voice.stop()
 
     async def play_song(
         self, interaction: discord.Interaction, *, song_path: str

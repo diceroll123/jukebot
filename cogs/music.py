@@ -12,6 +12,10 @@ from .utils import checks
 NEO_JUKEBOX = 1077343507343212585
 MUSIC_DIR = Path("./music")
 
+MUSIC_COOLDOWN = commands.CooldownMapping.from_cooldown(  # shared cooldown
+    rate=1, per=5, type=commands.BucketType.guild
+)
+
 
 def get_song_index(songs: list[str], song_name: str) -> int | None:
     """Returns the index of the song in the list of songs"""
@@ -57,8 +61,7 @@ class Music(commands.Cog):
             allowed_mentions=discord.AllowedMentions(replied_user=False),
         )
 
-    @commands.command()
-    @commands.cooldown(rate=1, per=5, type=commands.BucketType.default)
+    @commands.command(cooldown=MUSIC_COOLDOWN)
     @checks.is_in_channel(NEO_JUKEBOX)
     async def shuffle(self, ctx: Context[Jukebot]) -> None:
         """Plays a random song from the local filesystem"""
@@ -73,8 +76,7 @@ class Music(commands.Cog):
 
         await self.play_song(ctx, song_path=random.choice(songs))
 
-    @commands.command()
-    @commands.cooldown(rate=1, per=5, type=commands.BucketType.default)
+    @commands.command(cooldown=MUSIC_COOLDOWN)
     @checks.is_in_channel(NEO_JUKEBOX)
     async def next(self, ctx: Context[Jukebot]) -> None:
         """Plays the next song from the local filesystem"""
@@ -90,8 +92,7 @@ class Music(commands.Cog):
         song = songs[(current_song_index + 1) % len(songs)]
         await self.play_song(ctx, song_path=song)
 
-    @commands.command(aliases=["prev"])
-    @commands.cooldown(rate=1, per=5, type=commands.BucketType.default)
+    @commands.command(aliases=["prev"], cooldown=MUSIC_COOLDOWN)
     @checks.is_in_channel(NEO_JUKEBOX)
     async def previous(self, ctx: Context[Jukebot]) -> None:
         """Plays the previous song from the local filesystem"""

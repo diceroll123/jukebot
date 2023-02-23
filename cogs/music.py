@@ -58,6 +58,28 @@ class Music(commands.Cog):
     async def cog_unload(self) -> None:
         self.check_voice.stop()
 
+    @commands.Cog.listener()
+    async def on_voice_state_update(
+        self,
+        member: discord.Member,
+        before: discord.VoiceState,
+        after: discord.VoiceState,
+    ) -> None:
+        
+        assert self.bot.user is not None
+        
+        if member.id == self.bot.user.id:
+            # ignore the bot's own voice state changes
+            return
+
+        # connect to the voice channel if the bot is not in it and someone else is in it
+        if (
+            after.channel is not None
+            and after.channel.id == NEO_JUKEBOX
+            and after.channel.guild.voice_client is None
+        ):
+            await after.channel.connect()
+
     async def play_song(
         self, interaction: discord.Interaction, *, song_path: str
     ) -> None:

@@ -10,9 +10,13 @@ from jukebot import Jukebot
 NEO_JUKEBOX = 1077343507343212585
 MUSIC_DIR = Path("./music")
 
-MUSIC_COOLDOWN = commands.CooldownMapping.from_cooldown(  # shared cooldown
-    rate=1, per=5, type=commands.BucketType.guild
-)
+
+def get_song_index(songs: list[str], song_name: str) -> int | None:
+    """Returns the index of the song in the list of songs"""
+    try:
+        return songs.index(song_name)
+    except ValueError:
+        return None
 
 
 def get_songs() -> list[str]:
@@ -63,6 +67,9 @@ class Music(commands.Cog):
 
         song_file = MUSIC_DIR / song_path
 
+        # to keep state of what's playing (or last played,) in which server
+        self.bot.currently_playing[interaction.guild.id] = song_file.name
+
         source = discord.PCMVolumeTransformer(
             discord.FFmpegPCMAudio(
                 str(song_file),
@@ -90,6 +97,53 @@ class Music(commands.Cog):
             )
             return
         await self.ensure_voice(interaction)
+        await self.play_song(interaction, song_path=song)
+
+    @discord.app_commands.command(
+        name="next", description="Plays the next song in the local filesystem"
+    )
+    async def next_slash(self, interaction: discord.Interaction) -> None:
+        assert interaction.guild is not None
+        await self.ensure_voice(interaction)
+        songs = get_songs()
+        current_song = self.bot.currently_playing[interaction.guild.id]
+
+        current_song_index = get_song_index(songs, current_song)
+        if current_song_index is None:
+            current_song_index = -1
+
+        song = songs[(current_song_index + 1) % len(songs)]
+        await self.play_song(interaction, song_path=song)
+
+    @discord.app_commands.command(
+        name="previous", description="Plays the previous song in the local filesystem"
+    )
+    async def previous_slash(self, interaction: discord.Interaction) -> None:
+        assert interaction.guild is not None
+        await self.ensure_voice(interaction)
+        songs = get_songs()
+        current_song = self.bot.currently_playing[interaction.guild.id]
+
+        current_song_index = get_song_index(songs, current_song) or 0
+
+        song = songs[current_song_index - 1]
+        await self.play_song(interaction, song_path=song)
+
+    @discord.app_commands.command(
+        name="shuffle", description="Plays a random song in the local filesystem"
+    )
+    async def shuffle_slash(self, interaction: discord.Interaction) -> None:
+        assert interaction.guild is not None
+        await self.ensure_voice(interaction)
+        songs = get_songs()
+
+        current_song = self.bot.currently_playing[interaction.guild.id]
+
+        current_song_index = get_song_index(songs, current_song)
+        if current_song_index is not None:
+            songs.pop(current_song_index)
+
+        song = random.choice(songs)
         await self.play_song(interaction, song_path=song)
 
     async def ensure_voice(self, interaction: discord.Interaction) -> None:

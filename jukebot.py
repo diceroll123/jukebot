@@ -3,7 +3,8 @@ import ctypes
 import ctypes.util
 import os
 import sys
-from typing import Any
+from collections import defaultdict
+from typing import Any, DefaultDict
 
 import discord
 from discord.ext import commands
@@ -23,10 +24,12 @@ initial_extensions = [
 
 class Jukebot(commands.Bot):
     initial_extensions: list[str]
+    currently_playing: DefaultDict[int, str]
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.initial_extensions = initial_extensions
+        self.currently_playing = defaultdict(str)
 
     async def start_extensions(self) -> None:
         for extension in self.initial_extensions:

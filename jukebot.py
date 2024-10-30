@@ -1,10 +1,13 @@
 import asyncio
+import contextlib
 import ctypes
 import ctypes.util
+import logging
 import os
 import sys
 from collections import defaultdict
-from typing import Any, DefaultDict
+from logging.handlers import RotatingFileHandler
+from typing import Any, DefaultDict, Generator
 
 import discord
 from discord.ext import commands
@@ -14,12 +17,51 @@ load_dotenv()
 
 discord.opus.load_opus(ctypes.util.find_library("opus"))  # type: ignore
 
-intents = discord.Intents.all()
+intents = discord.Intents.none()
+intents.voice_states = True
+intents.guilds = True
+intents.message_content = True
+intents.guild_messages = True
 
 initial_extensions = [
     "cogs.music",
     "cogs.debug",
 ]
+
+
+@contextlib.contextmanager
+def setup_logging() -> Generator[None, None, None]:
+    try:
+        # __enter__
+        max_bytes = 32 * 1024 * 1024  # 32 MiB
+        logging.getLogger("discord").setLevel(logging.INFO)
+        logging.getLogger("discord.http").setLevel(logging.WARNING)
+
+        log = logging.getLogger()
+        log.setLevel(logging.INFO)
+        handler = RotatingFileHandler(
+            filename="bot.log",
+            encoding="utf-8",
+            mode="w",
+            maxBytes=max_bytes,
+            backupCount=2,
+        )
+        dt_fmt = "%Y-%m-%d %H:%M:%S"
+        fmt = logging.Formatter(
+            "[{asctime}] [{levelname:<7}] {name}: {message}",
+            dt_fmt,
+            style="{",
+        )
+        handler.setFormatter(fmt)
+        log.addHandler(handler)
+
+        yield
+    finally:
+        # __exit__
+        handlers = log.handlers[:]
+        for hdlr in handlers:
+            hdlr.close()
+            log.removeHandler(hdlr)
 
 
 class Jukebot(commands.Bot):
@@ -64,12 +106,14 @@ class Jukebot(commands.Bot):
 
 
 async def main() -> None:
-    bot = Jukebot(
-        command_prefix=commands.when_mentioned_or("$"),
-        intents=intents,
-    )
-    async with bot:
-        await bot.start(os.getenv("BOT_TOKEN"))  # type: ignore
+    with setup_logging():
+        bot = Jukebot(
+            max_messages=None,
+            command_prefix=commands.when_mentioned_or("$"),
+            intents=intents,
+        )
+        async with bot:
+            await bot.start(os.getenv("BOT_TOKEN"))  # type: ignore
 
 
 if __name__ == "__main__":  # so this doesn't get run when we import it

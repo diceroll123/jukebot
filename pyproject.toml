@@ -1,0 +1,13 @@
+[project]
+name = "jukebot"
+version = "0.0.1"
+description = "A Discord bot for playing Neopets music in voice channels."
+readme = "README.md"
+requires-python = ">=3.13, <4.0"
+dependencies = [
+    "discord-py[voice]",
+    "python-dotenv>=1.0.1",
+]
+
+[tool.uv.sources]
+discord-py = { git = "https://github.com/Rapptz/discord.py" }

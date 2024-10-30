@@ -1,8 +1,6 @@
 # Jukebot
 
-Small Discord bot to play music forever! *(bring your own music! Currently only supports `.mp3` files.)*
-
-*tbh this was just a good excuse to fiddle around with Docker.*
+Small Discord bot to play music forever! _(bring your own music! Currently only supports `.mp3` files.)_
 
 ## Environment Variables
 
@@ -15,10 +13,8 @@ To run this project, you will need to add the following environment variables to
 To deploy this project, run
 
 ```bash
-docker build -t jukebot . && docker run -it -v "$(pwd)"/:/app --rm --name running-jukebot jukebot 
+docker compose up
 ```
-
-*TODO: make that into a docker-compose*
 
 ## Notes
 

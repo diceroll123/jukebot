@@ -1,0 +1,7 @@
+services:
+  jukebot:
+    build: .
+    volumes:
+      - ./:/app
+    container_name: running-jukebot
+    restart: on-failure:5

@@ -1,3 +1,6 @@
 .env
 assets/
 music/*
+.venv
+.vscode
+.ruff_cache

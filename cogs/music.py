@@ -65,9 +65,8 @@ class Music(commands.Cog):
         before: discord.VoiceState,
         after: discord.VoiceState,
     ) -> None:
-        
         assert self.bot.user is not None
-        
+
         if member.id == self.bot.user.id:
             # ignore the bot's own voice state changes
             return
@@ -100,7 +99,8 @@ class Music(commands.Cog):
         )
 
         interaction.guild.voice_client.play(  # type: ignore
-            source, after=lambda e: print(f"Player error: {e}") if e else None  # type: ignore
+            source,
+            after=lambda e: print(f"Player error: {e}") if e else None,  # type: ignore
         )
 
         await interaction.response.send_message(

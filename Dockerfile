@@ -1,8 +1,17 @@
-FROM docker.io/gorialis/discord.py:3.11.0-alpine-master-minimal
+FROM ghcr.io/astral-sh/uv:python3.13-alpine
+
+RUN apk add --no-cache \
+    git \
+    opus \
+    opus-dev \
+    libffi-dev \
+    gcc \
+    musl-dev \
+    ffmpeg
 
 WORKDIR /app
 
 COPY . .
-RUN pip install -r requirements.txt
+RUN uv sync
 
-CMD ["python", "jukebot.py"]
+CMD ["uv", "run", "jukebot.py"]

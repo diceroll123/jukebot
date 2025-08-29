@@ -5,8 +5,8 @@ description = "A Discord bot for playing Neopets music in voice channels."
 readme = "README.md"
 requires-python = ">=3.13, <4.0"
 dependencies = [
-    "discord-py[voice]",
-    "python-dotenv>=1.0.1",
+    "discord-py[voice, speed]",
+    "python-dotenv>=1.1.1",
 ]
 
 [tool.uv.sources]

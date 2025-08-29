@@ -8,6 +8,3 @@ dependencies = [
     "discord-py[voice, speed]",
     "python-dotenv>=1.1.1",
 ]
-
-[tool.uv.sources]
-discord-py = { git = "https://github.com/Rapptz/discord.py" }

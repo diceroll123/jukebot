@@ -159,11 +159,15 @@ wheels = [
 
 [[package]]
 name = "discord-py"
-version = "2.5.0a5120+ged615887"
-source = { git = "https://github.com/Rapptz/discord.py#ed615887f073e0dd74de0c43d56a65934582e903" }
+version = "2.6.2"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "audioop-lts" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e7/e2/12e0e058bd2722632a828a7bc4492d780edbf3beb430275dde8fc6e04846/discord_py-2.6.2.tar.gz", hash = "sha256:e3ac5b0353211c831f046a258f4e91c6745ecd544286d29868988ebf7a695d1d", size = 1091985, upload-time = "2025-08-24T17:25:48.985Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/36/82/bdb47824d8640711c7ceee7d4224690509a0a6a1cd790f39039b7be4a87b/discord_py-2.6.2-py3-none-any.whl", hash = "sha256:6b257b02ef1a6374a2ddc4cdbfcfa6edbf88674dddeef66800c5d9403b710a2e", size = 1208887, upload-time = "2025-08-24T17:25:46.992Z" },
 ]
 
 [package.optional-dependencies]
@@ -221,7 +225,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "discord-py", extras = ["voice", "speed"], git = "https://github.com/Rapptz/discord.py" },
+    { name = "discord-py", extras = ["voice", "speed"] },
     { name = "python-dotenv", specifier = ">=1.1.1" },
 ]
 

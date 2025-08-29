@@ -58,10 +58,10 @@ def setup_logging() -> Generator[None, None, None]:
         yield
     finally:
         # __exit__
-        handlers = log.handlers[:]
+        handlers = log.handlers[:]  # type: ignore
         for hdlr in handlers:
             hdlr.close()
-            log.removeHandler(hdlr)
+            log.removeHandler(hdlr)  # type: ignore
 
 
 class Jukebot(commands.Bot):
